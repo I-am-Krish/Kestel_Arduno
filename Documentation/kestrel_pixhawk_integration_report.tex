@@ -402,7 +402,7 @@ This report covers the following:
 
 \begin{table}[H]
     \centering
-    \begin{tabularx}{\textwidth}{@{}lXl@{}}
+    \begin{tabularx}{\textwidth}{@{}lXX@{}}
         \toprule
         \textbf{Component} & \textbf{Description} & \textbf{Role} \\
         \midrule
@@ -501,21 +501,21 @@ following standard pinout:
     %% ── Signal wires ────────────────────────────────────────────────────────
     %% Pin2 TX  ──►  GPIO16 RX2   (green, cross-connect)
     \draw[swire, green!55!black]
-        (p2.east) to[out=0,in=180] (g16.west);
-    \node[above, font=\tiny, text=green!40!black] at (5.75, 0.35)
-        {\textbf{TX $\rightarrow$ RX2}\quad cross-connection};
+        (p2.east) to[out=0,in=180] 
+        node[pos=0.35, above=-0.05cm, font=\tiny, text=green!40!black] {\textbf{TX $\rightarrow$ RX2}\quad cross-connection}
+        (g16.west);
 
     %% GPIO17 TX2 ──►  Pin3 RX    (orange, cross-connect)
     \draw[swire, orange!65!black]
-        (g17.west) to[out=180,in=0] (p3.east);
-    \node[above, font=\tiny, text=orange!55!black] at (5.75, 1.05)
-        {\textbf{TX2 $\rightarrow$ RX}\quad cross-connection};
+        (g17.west) to[out=180,in=0] 
+        node[pos=0.35, above=-0.05cm, font=\tiny, text=orange!55!black] {\textbf{TX2 $\rightarrow$ RX}\quad cross-connection}
+        (p3.east);
 
     %% Pin6 GND ──── ESP32 GND    (black, common ground)
     \draw[swire, black!55, <->]
-        (p6.east) -- (gnd.west);
-    \node[above, font=\tiny, text=black!60] at (5.75, -1.75)
-        {Common Ground};
+        (p6.east) -- 
+        node[above, font=\tiny, text=black!60] {Common Ground}
+        (gnd.west);
 
     %% Not-connected stubs
     \draw[nc] (p1.east) -- ++(0.9,0)
@@ -534,7 +534,7 @@ following standard pinout:
     %% Baud-rate callout on the UART wires
     \node[draw=codegray, dashed, rounded corners=2pt, fill=white,
           font=\tiny, inner sep=3pt, text=codegray]
-        at (5.75, -0.5) {57{,}600 baud, 8N1, No parity};
+        at (5.75, 0.7) {57{,}600 baud, 8N1, No parity};
 
     \end{tikzpicture}%
     }%
@@ -681,19 +681,19 @@ after crossing the USB physical layer.
     \begin{tikzpicture}[
         %% ESP32 stage box
         esl/.style={rectangle, draw=darkblue, thick,
-                    minimum width=6.0cm, minimum height=1.1cm,
+                    minimum width=6.8cm, minimum height=1.1cm,
                     align=center, fill=blue!6, font=\scriptsize,
-                    text width=5.8cm, rounded corners=2pt},
+                    text width=6.6cm, rounded corners=2pt},
         %% PC GCS stage box
         pcl/.style={rectangle, draw=successgreen, thick,
-                    minimum width=6.0cm, minimum height=1.1cm,
+                    minimum width=6.8cm, minimum height=1.1cm,
                     align=center, fill=green!5, font=\scriptsize,
-                    text width=5.8cm, rounded corners=2pt},
+                    text width=6.6cm, rounded corners=2pt},
         %% USB boundary boxes
         usbl/.style={rectangle, draw=skyblue, thick,
-                     minimum width=6.0cm, minimum height=1.1cm,
+                     minimum width=6.8cm, minimum height=1.1cm,
                      align=center, fill=skyblue!15, font=\scriptsize,
-                     text width=5.8cm, rounded corners=2pt},
+                     text width=6.6cm, rounded corners=2pt},
         arr/.style={->, thick, >=stealth, draw=codegray},
         anno/.style={font=\tiny, text=codegray, align=left,
                      text width=3.4cm}
@@ -742,15 +742,15 @@ after crossing the USB physical layer.
         \draw[arr] (\f.south) -- (\t.north);
 
     %% Right-side annotations for ESP32
-    \node[anno] at (4.8, 6.75)
+    \node[anno] at (5.3, 6.75)
         {MAVLink frame decoded\\from wire bytes};
-    \node[anno] at (4.8, 5.25)
+    \node[anno] at (5.3, 5.25)
         {Decoded MAVLink struct\\(e.g.~mavlink\_attitude\_t)};
-    \node[anno] at (4.8, 3.75)
+    \node[anno] at (5.3, 3.75)
         {Field-mapped Kestrel\\payload (plaintext)};
-    \node[anno] at (4.8, 2.25)
+    \node[anno] at (5.3, 2.25)
         {Kestrel packet: header\\+ ciphertext + MAC};
-    \node[anno] at (4.8, 0.75)
+    \node[anno] at (5.3, 0.75)
         {Encrypted binary\\packet on USB wire};
 
     %% ==================================================================
@@ -758,42 +758,42 @@ after crossing the USB physical layer.
     %% ==================================================================
     \draw[->, skyblue, line width=2.8pt, >=stealth]
         (s6.east) -- (p1.west);
-    \node[below, font=\footnotesize, text=skyblue, align=center] at (9.75, -0.4)
+    \node[below, font=\footnotesize, text=skyblue, align=center] at (7.5, -0.4)
         {USB Micro-B cable $\cdot$ 115{,}200 baud $\cdot$ \texttt{/dev/ttyUSB0}};
-    \node[below, font=\tiny, text=codegray, align=center] at (9.75, -0.72)
+    \node[below, font=\tiny, text=codegray, align=center] at (7.5, -0.72)
         {encrypted Kestrel binary packets};
 
     %% ==================================================================
-    %% PC GCS COLUMN  (x = 19.5, top of column = USB RX at y = 0)
+    %% PC GCS COLUMN  (x = 15.0, top of column = USB RX at y = 0)
     %% ==================================================================
-    \node[font=\normalsize\bfseries, text=successgreen] at (19.5, 1.0)
+    \node[font=\normalsize\bfseries, text=successgreen] at (15.0, 1.0)
         {PC Ground Control Station};
-    \node[font=\tiny, text=codegray] at (19.5, 0.6)
+    \node[font=\tiny, text=codegray] at (15.0, 0.6)
         {kestrel\_gcs\_usb.py (Python 3.10)};
 
-    \node[usbl] (p1) at (19.5, 0)
+    \node[usbl] (p1) at (15.0, 0)
         {\textbf{USB Serial Receive}\\[2pt]
          \texttt{pyserial} \texttt{serial.read(64)}\\[1pt]
          \texttt{/dev/ttyUSB0} @ 115{,}200 baud};
 
-    \node[pcl] (p2) at (19.5, -1.6)
+    \node[pcl] (p2) at (15.0, -1.6)
         {\textbf{Kestrel Packet Parser (State Machine)}\\[2pt]
          States: IDLE $\to$ SOF $\to$ HDR\_B1-3 $\to$ EXT\_HDR $\to$
          OPT\_NONCE $\to$ PAYLOAD $\to$ CRC\\[1pt]
          CRC-16/MCRF4XX validated on complete frame};
 
-    \node[pcl] (p3) at (19.5, -3.2)
+    \node[pcl] (p3) at (15.0, -3.2)
         {\textbf{ChaCha20-Poly1305 AEAD Decrypt}\\[2pt]
          \texttt{pycryptodome}: \texttt{ChaCha20\_Poly1305.new(key=K, nonce=N24)}\\[1pt]
          \texttt{cipher.decrypt\_and\_verify(ciphertext, mac\_tag)}};
 
-    \node[pcl] (p4) at (19.5, -4.8)
+    \node[pcl] (p4) at (15.0, -4.8)
         {\textbf{Message Decoder}\\[2pt]
          ATT (0x002): \texttt{struct.unpack('<fff', payload)} $\rightarrow$ roll/pitch/yaw\\[1pt]
          GPS (0x003): int32 lat/lon/alt $\rightarrow$ degrees/metres $\cdot$
          HB (0x001): mode/type/status};
 
-    \node[pcl, fill=yellow!8, draw=warnorange] (p5) at (19.5, -6.4)
+    \node[pcl, fill=yellow!8, draw=warnorange] (p5) at (15.0, -6.4)
         {\textbf{Terminal Display + Session Statistics}\\[2pt]
          Timestamped \texttt{[HH:MM:SS] ATT/GPS/HB} lines with coloured prefixes\\[1pt]
          Running counters: RX\;pkts $\cdot$ TX\;pkts $\cdot$ CRC\;errors $\cdot$ MAC\;failures};
@@ -803,10 +803,10 @@ after crossing the USB physical layer.
         \draw[arr] (\f.south) -- (\t.north);
 
     %% Left-side annotations for PC
-    \node[anno] at (14.1, -0.8) {Received raw bytes\\(encrypted Kestrel)};
-    \node[anno] at (14.1, -2.4) {Validated Kestrel\\frame buffer};
-    \node[anno] at (14.1, -4.0) {Authenticated\\plaintext payload};
-    \node[anno] at (14.1, -5.6) {Decoded message\\fields};
+    \node[anno] at (10.0, -0.8) {Received raw bytes\\(encrypted Kestrel)};
+    \node[anno] at (10.0, -2.4) {Validated Kestrel\\frame buffer};
+    \node[anno] at (10.0, -4.0) {Authenticated\\plaintext payload};
+    \node[anno] at (10.0, -5.6) {Decoded message\\fields};
 
     \end{tikzpicture}%
     }%
@@ -845,16 +845,16 @@ shows the complete wire format for an \textbf{encrypted, unfragmented} packet
     % Row 1
     \node[bitbox, minimum width=8*\w cm] at (31*\w - 3.5*\w, 0) {SOF (0xA5)};
     \node[bitbox, minimum width=4*\w cm] at (31*\w - 9.5*\w, 0) {plen[11:8]};
-    \node[bitbox, minimum width=2*\w cm] at (31*\w - 12.5*\w, 0) {prio};
-    \node[bitbox, minimum width=2*\w cm] at (31*\w - 14.5*\w, 0) {strm[3:2]};
-    \node[bitbox, minimum width=2*\w cm] at (31*\w - 16.5*\w, 0) {strm[1:0]};
+    \node[bitbox, minimum width=2*\w cm] at (31*\w - 12.5*\w, 0) {pr};
+    \node[bitbox, minimum width=2*\w cm] at (31*\w - 14.5*\w, 0) {s1};
+    \node[bitbox, minimum width=2*\w cm] at (31*\w - 16.5*\w, 0) {s0};
     \node[bitbox, minimum width=6*\w cm] at (31*\w - 20.5*\w, 0) {plen[7:2]};
-    \node[bitbox, minimum width=2*\w cm] at (31*\w - 24.5*\w, 0) {plen[1:0]};
+    \node[bitbox, minimum width=2*\w cm] at (31*\w - 24.5*\w, 0) {p0};
     \node[bitbox, minimum width=1*\w cm] at (31*\w - 26*\w, 0) {R};
     \node[bitbox, minimum width=1*\w cm] at (31*\w - 27*\w, 0) {C};
     \node[bitbox, minimum width=1*\w cm] at (31*\w - 28*\w, 0) {E};
     \node[bitbox, minimum width=1*\w cm] at (31*\w - 29*\w, 0) {F};
-    \node[bitbox, minimum width=2*\w cm] at (31*\w - 30.5*\w, 0) {seq[11:10]};
+    \node[bitbox, minimum width=2*\w cm] at (31*\w - 30.5*\w, 0) {sq};
 
     % Row 2
     \node[bitbox, minimum width=10*\w cm] at (31*\w - 4.5*\w, -0.7) {Sequence[9:0]};
@@ -888,6 +888,9 @@ shows the complete wire format for an \textbf{encrypted, unfragmented} packet
     \textbf{C}\,=\,KS\_FLAG\_COMPRESSED (LZ4);\enspace
     \textbf{E}\,=\,KS\_FLAG\_ENCRYPTED (ChaCha20-Poly1305);\enspace
     \textbf{F}\,=\,KS\_FLAG\_FRAGMENTED.\enspace
+    Abbreviations: \textbf{pr}\,=\,prio,\enspace \textbf{s1}\,=\,strm[3:2],\enspace
+    \textbf{s0}\,=\,strm[1:0],\enspace \textbf{p0}\,=\,plen[1:0],\enspace
+    \textbf{sq}\,=\,seq[11:10].\enspace
     Fields \textbf{plen}, \textbf{seq}, and \textbf{strm} are split
     across bytes per the Kestrel Core Spec Section~3.1.}
     \label{fig:pktformat}
