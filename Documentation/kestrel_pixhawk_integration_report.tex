@@ -681,19 +681,19 @@ after crossing the USB physical layer.
     \begin{tikzpicture}[
         %% ESP32 stage box
         esl/.style={rectangle, draw=darkblue, thick,
-                    minimum width=6.8cm, minimum height=1.1cm,
+                    minimum width=8.5cm, minimum height=1.1cm,
                     align=center, fill=blue!6, font=\scriptsize,
-                    text width=6.6cm, rounded corners=2pt},
+                    text width=8.3cm, rounded corners=2pt},
         %% PC GCS stage box
         pcl/.style={rectangle, draw=successgreen, thick,
-                    minimum width=6.8cm, minimum height=1.1cm,
+                    minimum width=8.5cm, minimum height=1.1cm,
                     align=center, fill=green!5, font=\scriptsize,
-                    text width=6.6cm, rounded corners=2pt},
+                    text width=8.3cm, rounded corners=2pt},
         %% USB boundary boxes
         usbl/.style={rectangle, draw=skyblue, thick,
-                     minimum width=6.8cm, minimum height=1.1cm,
+                     minimum width=8.5cm, minimum height=1.1cm,
                      align=center, fill=skyblue!15, font=\scriptsize,
-                     text width=6.6cm, rounded corners=2pt},
+                     text width=8.3cm, rounded corners=2pt},
         arr/.style={->, thick, >=stealth, draw=codegray},
         anno/.style={font=\tiny, text=codegray, align=left,
                      text width=3.4cm}
@@ -714,8 +714,7 @@ after crossing the USB physical layer.
 
     \node[esl] (s2) at (0, 6.0)
         {\textbf{MAVLink v2 Frame Parser}\\[2pt]
-         \texttt{mavlink\_parse\_char(MAVLINK\_COMM\_0,}\\[0.5pt]
-         \texttt{\quad byte, \&msg, \&stat)}\\[1pt]
+         \texttt{mavlink\_parse\_char(MAVLINK\_COMM\_0, byte, \&msg, \&stat)}\\[1pt]
          Byte-by-byte assembly; validates MAVLink CRC-16};
 
     \node[esl] (s3) at (0, 4.5)
@@ -730,8 +729,7 @@ after crossing the USB physical layer.
 
     \node[esl] (s5) at (0, 1.5)
         {\textbf{ChaCha20-Poly1305 AEAD Encrypt}\\[2pt]
-         \texttt{kestrel\_pack\_with\_nonce(buf, \&hdr,}\\[0.5pt]
-         \texttt{\quad payload, \&session)}\\[1pt]
+         \texttt{kestrel\_pack\_with\_nonce(buf, \&hdr, payload, \&session)}\\[1pt]
          Nonce\,=\,4-B CSPRNG\,$\|$\,4-B counter $\cdot$ Appends 16-B MAC tag};
 
     \node[usbl] (s6) at (0, 0)
@@ -744,15 +742,15 @@ after crossing the USB physical layer.
         \draw[arr] (\f.south) -- (\t.north);
 
     %% Right-side annotations for ESP32
-    \node[anno] at (5.7, 6.75)
+    \node[anno] at (6.0, 6.75)
         {MAVLink frame decoded\\from wire bytes};
-    \node[anno] at (5.7, 5.25)
+    \node[anno] at (6.0, 5.25)
         {Decoded MAVLink struct\\(e.g.~mavlink\_attitude\_t)};
-    \node[anno] at (5.7, 3.75)
+    \node[anno] at (6.0, 3.75)
         {Field-mapped Kestrel\\payload (plaintext)};
-    \node[anno] at (5.7, 2.25)
+    \node[anno] at (6.0, 2.25)
         {Kestrel packet: header\\+ ciphertext + MAC};
-    \node[anno] at (5.7, 0.75)
+    \node[anno] at (6.0, 0.75)
         {Encrypted binary\\packet on USB wire};
 
     %% ==================================================================
@@ -760,42 +758,42 @@ after crossing the USB physical layer.
     %% ==================================================================
     \draw[->, skyblue, line width=2.8pt, >=stealth]
         (s6.east) -- (p1.west);
-    \node[below, font=\footnotesize, text=skyblue, align=center] at (7.5, -0.4)
+    \node[below, font=\footnotesize, text=skyblue, align=center] at (9.0, -0.4)
         {USB Micro-B cable $\cdot$ 115{,}200 baud\\[1pt] \texttt{/dev/ttyUSB0}};
-    \node[below, font=\tiny, text=codegray, align=center] at (7.5, -1.0)
+    \node[below, font=\tiny, text=codegray, align=center] at (9.0, -1.0)
         {encrypted Kestrel binary packets};
 
     %% ==================================================================
-    %% PC GCS COLUMN  (x = 15.0, top of column = USB RX at y = 0)
+    %% PC GCS COLUMN  (x = 18.0, top of column = USB RX at y = 0)
     %% ==================================================================
-    \node[font=\normalsize\bfseries, text=successgreen] at (15.0, 1.0)
+    \node[font=\normalsize\bfseries, text=successgreen] at (18.0, 1.0)
         {PC Ground Control Station};
-    \node[font=\tiny, text=codegray] at (15.0, 0.6)
+    \node[font=\tiny, text=codegray] at (18.0, 0.6)
         {kestrel\_gcs\_usb.py (Python 3.10)};
 
-    \node[usbl] (p1) at (15.0, 0)
+    \node[usbl] (p1) at (18.0, 0)
         {\textbf{USB Serial Receive}\\[2pt]
          \texttt{pyserial} \texttt{serial.read(64)}\\[1pt]
          \texttt{/dev/ttyUSB0} @ 115{,}200 baud};
 
-    \node[pcl] (p2) at (15.0, -1.6)
+    \node[pcl] (p2) at (18.0, -1.6)
         {\textbf{Kestrel Packet Parser (State Machine)}\\[2pt]
          States: IDLE $\to$ SOF $\to$ HDR\_B1-3 $\to$ EXT\_HDR $\to$
          OPT\_NONCE $\to$ PAYLOAD $\to$ CRC\\[1pt]
          CRC-16/MCRF4XX validated on complete frame};
 
-    \node[pcl] (p3) at (15.0, -3.2)
+    \node[pcl] (p3) at (18.0, -3.2)
         {\textbf{ChaCha20-Poly1305 AEAD Decrypt}\\[2pt]
          \texttt{pycryptodome}: \texttt{ChaCha20\_Poly1305.new(key=K, nonce=N24)}\\[1pt]
          \texttt{cipher.decrypt\_and\_verify(ciphertext, mac\_tag)}};
 
-    \node[pcl] (p4) at (15.0, -4.8)
+    \node[pcl] (p4) at (18.0, -4.8)
         {\textbf{Message Decoder}\\[2pt]
          ATT: \texttt{struct.unpack('<fff', payload)} $\rightarrow$ roll/pitch/yaw\\[1pt]
          GPS: int32 lat/lon/alt $\rightarrow$ deg/m $\cdot$
          HB: mode/type/status};
 
-    \node[pcl, fill=yellow!8, draw=warnorange] (p5) at (15.0, -6.4)
+    \node[pcl, fill=yellow!8, draw=warnorange] (p5) at (18.0, -6.4)
         {\textbf{Terminal Display + Session Statistics}\\[2pt]
          Timestamped \texttt{[HH:MM:SS] ATT/GPS/HB} lines with coloured prefixes\\[1pt]
          Counters: RX\;pkts $\cdot$ TX\;pkts $\cdot$ CRC\;errors $\cdot$ MAC\;failures};
@@ -805,10 +803,10 @@ after crossing the USB physical layer.
         \draw[arr] (\f.south) -- (\t.north);
 
     %% Left-side annotations for PC
-    \node[anno, text width=2.9cm, align=right] at (9.7, -0.8) {Received raw bytes\\(encrypted Kestrel)};
-    \node[anno, text width=2.9cm, align=right] at (9.7, -2.4) {Validated Kestrel\\frame buffer};
-    \node[anno, text width=2.9cm, align=right] at (9.7, -4.0) {Authenticated\\plaintext payload};
-    \node[anno, text width=2.9cm, align=right] at (9.7, -5.6) {Decoded message\\fields};
+    \node[anno, text width=2.9cm, align=right] at (12.0, -0.8) {Received raw bytes\\(encrypted Kestrel)};
+    \node[anno, text width=2.9cm, align=right] at (12.0, -2.4) {Validated Kestrel\\frame buffer};
+    \node[anno, text width=2.9cm, align=right] at (12.0, -4.0) {Authenticated\\plaintext payload};
+    \node[anno, text width=2.9cm, align=right] at (12.0, -5.6) {Decoded message\\fields};
 
     \end{tikzpicture}%
     }%
